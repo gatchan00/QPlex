@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block head %}
+{{ super() }}
+
+{% endblock %}
+{% block main %}
+<div class="card border-light shadow-sm mb-4 p-4">
+    <form action="" method="post">
+        <h5 class="card-title mb-4">Variables</h5>
+        <div class="form-group row">
+            <div class="input-group col-sm-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">A</div>
+                </div>
+                <input type="number" class="form-control" placeholder="input here" name="a">
+            </div>
+            <div class="input-group col-sm-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">B</div>
+                </div>
+                <input type="number" class="form-control" placeholder="input here" name="b">
+            </div>
+            <div class="input-group col-sm-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">C</div>
+                </div>
+                <input type="number" class="form-control" placeholder="input here" name="c">
+            </div>
+            <div class="input-group col-sm-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">D</div>
+                </div>
+                <input type="number" class="form-control" placeholder="input here" name="d">
+            </div>
+        </div>
+        <div class="form-group row">
+            <!-- A -->
+            <div class="input-group col-sm-3 mb-2">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="optionA" checked>
+                    <label class="form-check-label" for="inlineRadioA1">Int</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="optionA">
+                    <label class="form-check-label" for="inlineRadioA2">Real</label>
+                </div>
+            </div>
+            <!-- B -->
+            <div class="input-group col-sm-3 mb-2">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="optionB" checked>
+                    <label class="form-check-label" for="inlineRadioB1">Int</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="optionB">
+                    <label class="form-check-label" for="inlineRadioB2">Real</label>
+                </div>
+            </div>
+            <!-- C -->
+            <div class="input-group col-sm-3 mb-2">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="optionC" checked>
+                    <label class="form-check-label" for="inlineRadioC1">Int</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="optionC">
+                    <label class="form-check-label" for="inlineRadioC2">Real</label>
+                </div>
+            </div>
+            <!-- D -->
+            <div class="input-group col-sm-3 mb-2">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="optionD" checked>
+                    <label class="form-check-label" for="inlineRadioD1">Int</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="optionD">
+                    <label class="form-check-label" for="inlineRadioD2">Real</label>
+                </div>
+            </div>
+        </div>
+        <h5 class="card-title mb-4">Restrictions</h5>
+        <div class="form-group row controls">
+            <div class="input-group col-sm-6 entry mb-2">
+                <input type="text" class="form-control" placeholder="2*A+5*B-D" name="rest1[]">
+                <div class="input-group-prepend">
+                    <div class="input-group-text"><</div>
+                </div>
+                <input type="text" class="form-control" placeholder="5" name="rest2[]">
+                <span class="input-group-btn">
+                    <button class="btn btn-success btn-add" type="button">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-10 mx-auto">
+                <button type="submit" role="button" class="btn btn-primary btn-lg btn-block">Optimize</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% if error %}
+<script>
+    Swal.fire({
+    type: 'error',
+    title: 'Oops...',
+    text: '{{ error }}'
+    })
+</script>
+{% endif %}
+
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/bootstrap-table.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script>
+        $(function()
+            {
+                $(document).on('click', '.btn-add', function(e)
+                {
+                    e.preventDefault();
+                    var controlForm = $('.controls'),
+                        currentEntry = $(this).parents('.entry:first'),
+                        newEntry = $(currentEntry.clone()).appendTo(controlForm);
+
+                    newEntry.find('input').val('');
+                    controlForm.find('.entry:not(:last) .btn-add')
+                        .removeClass('btn-add').addClass('btn-remove')
+                        .removeClass('btn-success').addClass('btn-danger')
+                        .html('<i class="fas fa-minus"></i>');
+                }).on('click', '.btn-remove', function(e)
+                {
+                    $(this).parents('.entry:first').remove();
+                    e.preventDefault();
+                    return false;
+                });
+            });
+    </script>
+{% endblock %}
