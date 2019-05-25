@@ -1,0 +1,60 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    {% block head %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Q-PLEX">
+    <meta name="theme-color" content="#007bff">
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.png') }}">
+    
+    <title>{% block title %}{% endblock %} - Q-PLEX</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.css" />
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.13.4/bootstrap-table.min.css" />
+    <!-- fontawesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
+    <!-- javascript -->
+    <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.29.2/sweetalert2.all.js"></script>
+    {% endblock %}
+  </head>
+
+  <body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom shadow-sm fixed-top">
+      <a class="navbar-brand" href="/">Q-PLEX</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+
+        </ul>
+        <ul class="navbar-nav">
+          <!-- <a class="nav-link active">texto por aquí</a> -->
+        </ul>
+      </div>
+    </nav>
+    
+    <!-- Begin page content -->
+    <main role="main" class="container">
+      {% block main %}{% endblock %}
+    </main>
+<footer class="footer mb-3">
+  <div class="container text-center">
+    <span class="text-muted">Q-PLEX</span>
+  </div>
+</footer>
+
+<!-- Load javascript -->
+{% block scripts %}
+<script src="{{url_for('.static', filename='js/bootstrap.min.js')}}"></script>
+{% endblock %}
+</body>
+</html>
