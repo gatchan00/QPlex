@@ -5,46 +5,38 @@ from flask import Flask, render_template, redirect, url_for, request, jsonify, R
 app = Flask(__name__)
 
 # Creamos función para manejar los datos
-def handle_data(variables, restrictions, depth, variationalForm, operatorMode):
+def handle_data(variables, restrictions):
     # check variables
     for i in variables:
-        if i[0] != 'int':
+        if i[1] != 'int':
             return [400, 'Bad variable type']
-    # check depth
-    try:
-        isinstance(depth, int)
-    except:
-        return [400, 'Bad depth value']
-    # check variationalForm
-    variationalForm = variationalForm.upper()
-    if variationalForm != 'RY' and variationalForm != 'RYRZ' and variationalForm != 'UCCSD' and variationalForm != 'SWAPRZ':
-        return [400, 'Bad variationalForm value']
-    # check operatorMode
-    operatorMode = operatorMode.upper()
-    if operatorMode != 'MATRIX' and operatorMode != 'MATRIX':
-        return [400, 'Bad operatorMode value']
     # check restrictions
     for r in restrictions:
         if not isinstance(r[0], str) or not isinstance(r[1], str):
             return [400, 'Bad restrinctions value']
     # output bueno
-    return [200, [variables, restrictions, depth, variationalForm, operatorMode]]
+    return [200, [variables, restrictions]]
 
 # Añadimos endpoint
 @app.route('/', methods=['GET', 'POST'])
 def home():
     error = None
     if request.method == 'POST':
-        # metemos variables en array
+        # comprobamos si quieren int o real
+        print(bool(request.form['optionA']))
+        print(bool(request.form['optionB']))
+        print(bool(request.form['optionC']))
+        print(bool(request.form['optionD']))
+        # metemos variables "y demás" en array
         variables = [
-            request.form['a'],
-            request.form['b'],
-            request.form['c'],
-            request.form['d']
+            ["a", "int", request.form['a']],
+            ["b", "int", request.form['b']],
+            ["c", "int", request.form['c']],
+            ["d", "int", request.form['d']]
         ]
         # metemos restrictions en array
         restrictions = [request.form.getlist('rest1[]'), request.form.getlist('rest2[]')]
-        data = handle_data(variables, restrictions, request.form['depth'], request.form['variationalForm'], request.form['operatorMode'])
+        data = handle_data(variables, restrictions)
         if data[0] == 200:
             #bien pepe bien
             print(data[1])
@@ -64,7 +56,7 @@ def api_post():
                 error='Bad request type'
             ), 400
     # handleamos data
-    data = handle_data(request.json['variables'], request.json['restrictions'], request.json['depth'], request.json['variationalForm'], request.json['operatorMode'])
+    data = handle_data(request.json['variables'], request.json['restrictions'])
     if data[0] == 200:
         return jsonify(
                 status='OK',
