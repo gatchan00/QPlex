@@ -6,4 +6,4 @@ dependencies:
 - notebook
 - ipywidgets
 - pip:
- - qiskit
+  - qiskit
