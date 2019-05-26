@@ -22,7 +22,7 @@ conda activate Qiskitenv
 
 # How does this work
 
-This software is prepared to minimize functions like &theta;<sub>o</sub> x + &theta;<sub>1</sub>y, applying the inequality x + y &le; $beta;, where you can choose your &theta;<sub>0</sub>, &theta;<sub>1</sub> and $beta;
+This software is prepared to minimize functions like &theta;<sub>o</sub> x + &theta;<sub>1</sub>y, applying the inequality x + y &le; &beta;, where you can choose your &theta;<sub>0</sub>, &theta;<sub>1</sub> and &beta;
 
 # API
 
@@ -30,7 +30,7 @@ A function called *wrapper_optimiza_f* will launch the optimization process, you
 
  1. precision --> the number of qbits used for each variable
  2. coefs_param --> A list with the coeficients of each variable
- 3. beta --> $beta; for the inequality constraint
+ 3. beta --> &beta; for the inequality constraint
  
 You will get a dictionary with the value of each variable
 
