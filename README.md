@@ -28,9 +28,9 @@ This software is prepared to minimize functions like &theta;<sub>o</sub> x + &th
 
 A function called *wrapper_optimiza_f* will launch the optimization process, you need to provide:
 
- 1. precision --> the number of qbits used for each variable
- 2. coefs_param --> A list with the coeficients of each variable
- 3. beta --> &beta; for the inequality constraint
+ 1. precision -> the number of qbits used for each variable
+ 2. coefs_param -> A list with the coeficients of each variable
+ 3. beta -> &beta; for the inequality constraint
  
 You will get a dictionary with the value of each variable
 
