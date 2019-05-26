@@ -1,11 +1,63 @@
 # importamos Flask
 from flask import Flask, render_template, redirect, url_for, request, jsonify, Response, abort
+# importamos qplex-core
+import sys
+sys.path.append('../')
+from qplex_core import *
 
 # Creamos el objeto app para enrutar las llamadas
 app = Flask(__name__)
 
-# Creamos función para manejar los datos
-def handle_data(variables, restrictions):
+# Creamos función para manejar los datos V2
+def handle_dataV2(variables, restriction, precision):
+    # check variables
+    for i in variables:
+        if isinstance(i, int) != True:
+            return [400, 'Bad variable value']
+    # check restriction
+    if isinstance(restriction, int) != True:
+        return [400, 'Bad restriction value']
+    # check precision
+    if isinstance(precision, int) != True or precision > 6:
+        return [400, 'Bad precision value']
+    # output bueno
+    return [200, [variables, restriction, precision]]
+
+# API-REST
+@app.route('/api/optimize', methods=['POST'])
+def api_optimize():
+    # comprobamos si es un json
+    if not request.json:
+        return jsonify(
+                status='ERROR',
+                message='Bad request type'
+            ), 400
+    data = handle_dataV2(request.json['variables'], request.json['restriction'], request.json['precision'])
+    if data[0] == 200:
+        # function: 2*X-3*Y
+        # restriction: X*y<=restriction
+        output = wrapper_optimiza_f(data[1][2], data[1][0], data[1][1])
+        output = {
+            'x': output[0],
+            'y': output[1]
+        }
+        return jsonify(
+                status='OK',
+                results=output
+            ), 200
+    elif data[0] == 400:
+        return jsonify(
+                status='ERROR',
+                message=data[1]
+            ), 400
+    else:
+        return jsonify(
+                status='ERROR',
+                message='Uknown error'
+            ), 400
+
+# Creamos función para manejar los datos V1
+def handle_dataV1(variables, restrictions):
     # check variables
     for i in variables:
         if i[1] != 'int':
@@ -17,7 +69,7 @@ def handle_data(variables, restrictions):
     # output bueno
     return [200, [variables, restrictions]]
 
-# Añadimos endpoint
+# Web front-end
 @app.route('/', methods=['GET', 'POST'])
 def home():
     error = None
@@ -36,7 +88,7 @@ def home():
         ]
         # metemos restrictions en array
         restrictions = [request.form.getlist('rest1[]'), request.form.getlist('rest2[]')]
-        data = handle_data(variables, restrictions)
+        data = handle_dataV1(variables, restrictions)
         if data[0] == 200:
             #bien pepe bien
             print(data[1])
@@ -45,33 +97,6 @@ def home():
         else:
             error = 'Uknown error'
     return render_template('home.html', error=error)
-
-# API
-@app.route('/api/post', methods=['POST'])
-def api_post():
-    # comprobamos si es un json
-    if not request.json:
-        return jsonify(
-                status='ERROR',
-                error='Bad request type'
-            ), 400
-    # handleamos data
-    data = handle_data(request.json['variables'], request.json['restrictions'])
-    if data[0] == 200:
-        return jsonify(
-                status='OK',
-                data=data[1]
-            ), 200
-    elif data[0] == 400:
-        return jsonify(
-                status='ERROR',
-                error=data[1]
-            ), 400
-    else:
-        return jsonify(
-                status='ERROR',
-                error='Uknown error'
-            ), 400
 
 # Iniciamos el servidor
 if __name__ == '__main__':
